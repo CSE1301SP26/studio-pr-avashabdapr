@@ -14,8 +14,9 @@ public class Game {
     private List<Enemy> enemies;
     private int numberOfEnemies;
     private int score;
+    private double minimum; 
 
-    public Game() {
+    public Game( int score) {
         player = new Player();
         enemyProjectiles = new LinkedList<>();
         playerProjectiles = new LinkedList<>();
@@ -33,8 +34,8 @@ public class Game {
             while(gameOver == false) {
                 updatePositions();
                 fireProjectiles();
-                gameOver = checkCollisions();
-                if(enemies.size() == 0) {
+                gameOver = checkEnemCollisions();
+                if(enemies.size() == minimum) {
                     numberOfEnemies++;
                     initializeLevel();
                 }
@@ -54,7 +55,7 @@ public class Game {
         }  
     }
 
-    private void updatePositions() {
+    private void updateEnemnyPositions() {
         for(int i = 0; i < enemyProjectiles.size(); i++) {
             Projectile p = enemyProjectiles.get(i);
             p.moveDown();
@@ -62,7 +63,8 @@ public class Game {
                 enemyProjectiles.remove(p);
             }
         }
-
+    } 
+    private void updatePlayerPositions() {
         for(int i = 0; i < playerProjectiles.size(); i++) {
             Projectile p = playerProjectiles.get(i);
             p.moveUp();
@@ -70,7 +72,8 @@ public class Game {
                 playerProjectiles.remove(p);
             }
         }
-
+    } 
+     private void updateMovement() {
         for(int i = 0; i < enemies.size(); i++) {
             Enemy e = enemies.get(i);
             e.move();
@@ -94,7 +97,7 @@ public class Game {
         }
     }
 
-    private boolean checkCollisions() {
+    private boolean checkPlayerCollisions() {
         for(int i = 0; i < playerProjectiles.size(); i++) {
             Projectile p = playerProjectiles.get(i);
             for(int j = 0; j < enemies.size(); j++) {
@@ -106,7 +109,8 @@ public class Game {
                 }
             }
         }
-
+    }
+    private boolean checkEnemyCollisions() {
         for(int i = 0; i < enemyProjectiles.size(); i++) {
             Projectile p = enemyProjectiles.get(i);
             if(p.collidesWith(player)) {
